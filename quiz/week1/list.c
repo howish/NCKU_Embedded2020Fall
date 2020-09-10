@@ -15,6 +15,7 @@ list *sort(list *start) {
         if (!right || (left && left->data < right->data)) {
             if (!merge) {
                 //LL1;
+                
             } else {
                 //LL2;
                 merge = merge->next;
