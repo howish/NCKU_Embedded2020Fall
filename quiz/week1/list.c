@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 // Problem description:
 typedef struct __node {
@@ -47,11 +48,23 @@ node_t *swap_pair(node_t *head)
         ) {
         node_t *tmp = *node;
         *node = (*node)->next; //BB2
-
         tmp->next = (*node)->next;
         (*node)->next = tmp;
     }
     return head;
+}
+
+void new_swap_pair(node_t **head)
+{
+    for (; *head && (*head)->next;
+        head = &(*head)->next->next
+        ) {
+        node_t *tmp = *head;
+        *head = (*head)->next;
+
+        tmp->next = (*head)->next;
+        (*head)->next = tmp;
+    }
 }
 
 node_t *reverse(node_t *head)
@@ -59,11 +72,40 @@ node_t *reverse(node_t *head)
     node_t *cursor = NULL;
     while (head) {
         node_t *next = head->next;
-        head->next = cursor, cursor = head; //CCC
+        head->next = cursor, cursor = head; // CCC
         head = next;
     }
     return cursor;
 }
+
+void new_reverse(node_t **head)
+{
+    node_t *cursor = NULL;
+    while (*head) {
+        node_t *next = (*head)->next;
+        (*head)->next = cursor, cursor = (*head);
+        *head = next;
+    }
+    *head = cursor;
+}
+
+void rev_recursive(node_t *cursor, node_t **head)
+{
+    if (!*head) {
+        *head = cursor;    
+        return;
+    }
+    node_t *next = (*head)->next;
+    (*head)->next = cursor, cursor = (*head);
+    *head = next;
+    rev_recursive(cursor, head);
+}
+void rec_reverse(node_t **head)
+{
+    rev_recursive(NULL, head);
+}
+
+
 
 void print_list(node_t *head)
 {
@@ -101,7 +143,16 @@ int main(int argc, char const *argv[])
     head = swap_pair(head);
     print_list(head);
 
+    new_swap_pair(&head);
+    print_list(head);
+
     head = reverse(head);
+    print_list(head);
+
+    new_reverse(&head);
+    print_list(head);
+
+    rec_reverse(&head);
     print_list(head);
 
     return 0;
