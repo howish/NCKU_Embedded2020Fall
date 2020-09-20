@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
+#include <time.h>
 
 // Problem description:
 typedef struct __node {
@@ -105,6 +107,30 @@ void rec_reverse(node_t **head)
     rev_recursive(NULL, head);
 }
 
+void fisher_yates_shuffle(node_t **head)
+{
+    // Compute length
+    int num = 0;
+    for (node_t *itr = *head; itr; num++, itr=itr->next)
+        /*iterate*/;
+
+    srand(time(NULL));
+
+    node_t *oldhead = *head;
+    for (; num; num--) {
+        // Pick the sampled node
+        node_t **picker = &oldhead;
+        for (int pos = rand() % num; pos; pos--)
+            picker = &(*picker)->next;
+
+        // Append picked node to result node
+        *head = *picker;
+        head = &(*head)->next;
+
+        // Remove picked node from old list
+        *picker = (*picker)->next;
+    }
+}
 
 
 void print_list(node_t *head)
@@ -126,6 +152,10 @@ int main(int argc, char const *argv[])
     add_entry(&head, 109);
     add_entry(&head, 110);
     add_entry(&head, 111);
+    add_entry(&head, 112);
+    add_entry(&head, 113);
+    add_entry(&head, 114);
+    add_entry(&head, 115);
 
     print_list(head);
 
@@ -153,6 +183,9 @@ int main(int argc, char const *argv[])
     print_list(head);
 
     rec_reverse(&head);
+    print_list(head);
+
+    fisher_yates_shuffle(&head);
     print_list(head);
 
     return 0;
